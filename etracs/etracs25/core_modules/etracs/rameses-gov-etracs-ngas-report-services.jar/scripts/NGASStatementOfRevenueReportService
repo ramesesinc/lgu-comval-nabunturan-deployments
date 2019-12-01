@@ -114,6 +114,11 @@ class NGASStatementOfRevenueReportService {
 			buildItemTitle( it ) 
 		}
 
+		def finallist = []; 
+		accounts.findAll{( it.type == 'root' )}.each{
+			buildTree( it, accounts, finallist ); 
+		}
+
 		items.clear(); 
 		if ( unmappeditems ) {
 			def m = [objid: 'unmapped', title: 'UNMAPPED ACCOUNTS*']; 
@@ -122,7 +127,7 @@ class NGASStatementOfRevenueReportService {
 			items << m;
 		}
 		items.addAll( unmappeditems ); 
-		items.addAll( accounts ); 
+		items.addAll( finallist ); 
 
 		def acctgroup = acctgroup_db.find([ objid: p.maingroupid ]).first();
 		def reporttype = (acctgroup?.reporttype ? acctgroup.reporttype : 'NGAS').toUpperCase(); 
@@ -169,6 +174,13 @@ class NGASStatementOfRevenueReportService {
 			def amount = accounts.findAll{( it.groupid == p.objid )}.sum{( it.amount ? it.amount : 0.0 )} 
 			p.amount = (amount ? amount : 0.0); 
 			summarizeTopNode( p, accounts ); 
+		}
+	}
+
+	private void buildTree( node, sourcelist, targetlist ) {
+		targetlist << node; 
+		sourcelist.findAll{( it.groupid == node.objid )}.each{
+			buildTree( it, sourcelist, targetlist ); 
 		}
 	}
 }
