@@ -1,0 +1,22 @@
+=========================================
+2019-11-14: ETRACS 2.5 PATCH ETRACS 
+=========================================
+
+-----------------------------------------
+ ABOUT THE PATCH 
+-----------------------------------------
+* Update ETRACS Views
+
+
+-----------------------------------------
+ SERVER UPDATE: 
+-----------------------------------------
+01. Open Navicat 
+
+    01.01 Connect to etracs main database 
+    01.02 Run the following script file: 
+
+    - {PATCH_DIR}/res/scripts/mysql/patch_etracs_01_views.sql
+
+
+02. Done.
