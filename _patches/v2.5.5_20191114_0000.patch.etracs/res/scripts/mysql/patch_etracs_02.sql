@@ -245,3 +245,83 @@ alter table rptcompromise_item add qtr int;
 
 
 alter table rptpayment drop foreign key rptpayment_cashreceipt;
+
+
+alter table fund add _parentid varchar(50) null;
+update fund set _parentid = parentid ;
+update fund set parentid = null;
+
+
+INSERT INTO `sys_usergroup` (`objid`, `title`, `domain`, `userclass`, `orgclass`, `role`) 
+VALUES ('RULEMGMT.DEV', 'RULEMGMT DEV', 'RULEMGMT', 'usergroup', NULL, 'DEV');
+
+INSERT INTO `sys_usergroup` (`objid`, `title`, `domain`, `userclass`, `orgclass`, `role`) 
+VALUES ('WORKFLOW.DEV', 'WORKFLOW DEV', 'WORKFLOW', 'usergroup', NULL, 'DEV');
+
+update sys_usergroup_member set usergroup_objid = 'RULEMGMT.DEV' where usergroup_objid = 'RULEMGMT.MASTER'; 
+update sys_usergroup_member set usergroup_objid = 'WORKFLOW.DEV' where usergroup_objid = 'WORKFLOW.MASTER'; 
+
+
+
+
+delete from sys_rule_action_param where parentid in ( 
+  select ra.objid 
+  from sys_rule r, sys_rule_action ra 
+  where r.ruleset in ('ctcindividual', 'ctccorporate') 
+    and ra.parentid=r.objid 
+)
+;
+delete from sys_rule_action where parentid in ( 
+  select objid from sys_rule 
+  where ruleset in ('ctcindividual', 'ctccorporate') 
+)
+;
+delete from sys_rule_condition_constraint where parentid in ( 
+  select rc.objid 
+  from sys_rule r, sys_rule_condition rc 
+  where r.ruleset in ('ctcindividual', 'ctccorporate') 
+    and rc.parentid=r.objid 
+)
+;
+delete from sys_rule_condition_var where parentid in ( 
+  select rc.objid 
+  from sys_rule r, sys_rule_condition rc 
+  where r.ruleset in ('ctcindividual', 'ctccorporate') 
+    and rc.parentid=r.objid 
+)
+;
+delete from sys_rule_condition where parentid in ( 
+  select objid from sys_rule where ruleset in ('ctcindividual', 'ctccorporate') 
+)
+;
+delete from sys_rule_deployed where objid in ( 
+  select objid from sys_rule where ruleset in ('ctcindividual', 'ctccorporate') 
+)
+;
+delete from sys_rule where ruleset in ('ctcindividual', 'ctccorporate') 
+;
+delete from sys_ruleset_fact where ruleset in ('ctcindividual', 'ctccorporate'); 
+delete from sys_ruleset_actiondef where ruleset in ('ctcindividual', 'ctccorporate'); 
+delete from sys_rule_actiondef_param where parentid in ( 
+  select ra.objid from sys_ruleset_actiondef rsa 
+    inner join sys_rule_actiondef ra on ra.objid=rsa.actiondef 
+  where rsa.ruleset in ('ctcindividual', 'ctccorporate') 
+);
+delete from sys_rule_actiondef where objid in ( 
+  select actiondef from sys_ruleset_actiondef 
+  where ruleset in ('ctcindividual', 'ctccorporate') 
+);
+
+delete from sys_rule_fact_field where parentid in ( 
+  select rf.objid from sys_ruleset_fact rsf 
+    inner join sys_rule_fact rf on rf.objid=rsf.rulefact 
+  where rsf.ruleset in ('ctcindividual', 'ctccorporate') 
+);
+delete from sys_rule_fact where objid in ( 
+  select rulefact from sys_ruleset_fact 
+  where ruleset in ('ctcindividual', 'ctccorporate') 
+);
+
+delete from sys_rulegroup where ruleset in ('ctcindividual', 'ctccorporate') ; 
+delete from sys_ruleset where name in ('ctcindividual', 'ctccorporate') ;
+
