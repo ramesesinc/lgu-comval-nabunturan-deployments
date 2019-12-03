@@ -107,7 +107,18 @@ class NGASStatementOfRevenueReportService {
 			} 
 		}
 
-		accounts.findAll{( it.amount > 0 )}.each{ summarizeTopNode( it, accounts ) } 
+		def amtlist = accounts.findAll{( it.amount > 0 )} 
+		def mlevel = amtlist.max{( it.level ? it.level : 0 )}?.level; 
+		if ( !mlevel ) maxlevel = 0; 
+
+		while (mlevel > 0) {
+			accounts.findAll{( it.level == mlevel )}.each{ n-> 
+				def amount = accounts.findAll{( it.groupid == n.objid )}.sum{( it.amount ? it.amount : 0.0 )} 
+				n.amount = (n.amount ? n.amount : 0.0) + (amount ? amount : 0.0);
+			}
+			mlevel--;
+		} 
+
 		accounts.removeAll( accounts.findAll{( it.amount == 0.0 )} ); 
 
 		accounts.each{
@@ -166,14 +177,6 @@ class NGASStatementOfRevenueReportService {
 		}
 		else {
 			o.title = ''+ o.prefix + (o.acctcode ? o.acctcode : '-') +'  '+ o.accttitle; 
-		}
-	}
-
-	private void summarizeTopNode( o, accounts ) {
-		accounts.findAll{( it.level == o.level-1 )}.each{ p-> 
-			def amount = accounts.findAll{( it.groupid == p.objid )}.sum{( it.amount ? it.amount : 0.0 )} 
-			p.amount = (amount ? amount : 0.0); 
-			summarizeTopNode( p, accounts ); 
 		}
 	}
 
