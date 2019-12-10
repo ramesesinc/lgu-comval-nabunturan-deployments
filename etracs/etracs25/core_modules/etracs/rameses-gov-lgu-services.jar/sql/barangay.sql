@@ -125,7 +125,9 @@ ORDER BY b.name
 [findBarangayParentLguInfo]
 SELECT
 	CASE WHEN m.objid IS NOT NULL THEN m.objid ELSE c.objid END AS objid,
-	CASE WHEN	m.objid IS NOT NULL THEN 'MUNICIPALITY' ELSE 'CITY' END as lgutype
+	CASE WHEN m.objid IS NOT NULL THEN 'MUNICIPALITY' ELSE 'CITY' END as lgutype,
+	CASE WHEN m.objid IS NOT NULL THEN m.name ELSE c.name END AS name,
+	CASE WHEN m.objid IS NOT NULL THEN m.fullname ELSE c.fullname END AS fullname 
 FROM barangay b
 	LEFT JOIN municipality m ON b.parentid = m.objid 
 	LEFT JOIN district d ON b.parentid = d.objid 
