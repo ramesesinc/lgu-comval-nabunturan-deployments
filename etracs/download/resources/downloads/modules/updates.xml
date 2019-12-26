@@ -17,8 +17,8 @@ entity.app.host=223.222.100.3:8070
 entity.app.context=etracs25
 
 #vehicle-service
-enterprise.app.host=223.222.100.3:8072
-enterprise.app.context=enterprise
+vehicle.app.host=223.222.100.3:8072
+vehicle.app.context=enterprise
 
 socketio.host=223.222.100.3:7080
 
