@@ -3,10 +3,15 @@ version: "3"
   local-vehicle-server:
     image: ramesesinc/local-vehicle-server:v002
     container_name: local-vehicle-server
+    logging: 
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
     env_file:
       - ./env.conf
     ports: 
       - "8072:8070"
     volumes:
       - ./vehicleds:/apps/server/services/datasources/mainds
-      - ./connections:/apps/server/services/apps/enterprise/connections
+      - ./connections:/apps/server/services/apps/enterprise/connections/ext
