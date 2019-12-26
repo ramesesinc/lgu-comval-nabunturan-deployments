@@ -38,7 +38,7 @@ services:
 
 
   etracs25-server:
-    image: ramesesinc/etracs25-server-municipality:255.01.001
+    image: ramesesinc/etracs25-server-municipality:255.01.005
     container_name: etracs25-server
 
     logging:
@@ -57,5 +57,4 @@ services:
       - "8080:8080"
 
     volumes:
-      - ./etracs25/core_modules:/apps/server/workspace/services/modules
-      - ./etracs25/custom_modules:/apps/server/workspace/services/apps/etracs25/modules
+      - ./etracs25/modules:/apps/server/workspace/services/apps/etracs25/modules
