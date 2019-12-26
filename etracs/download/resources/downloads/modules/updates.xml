@@ -12,8 +12,13 @@ connectionTimeout=5000
 ws.host=223.222.100.3:8060
 #res.host=223.222.100.3
 
+#entity-service
 entity.app.host=223.222.100.3:8070
 entity.app.context=etracs25
+
+#vehicle-service
+entity.app.host=223.222.100.3:8072
+entity.app.context=enterprise
 
 socketio.host=223.222.100.3:7080
 
@@ -42,7 +47,7 @@ socketio.host=223.222.100.3:7080
 	<module file="core/rameses-common2.jar" version="2.56"/>
 	<module file="core/rameses-custom-impl.jar" version="2.56"/>
 	<module file="core/rameses-jdbc16.jar" version="2.56"/>
-	<module file="core/rameses-seti.jar" version="2.56"/>
+	<module file="core/rameses-seti.jar" version="2.57"/>
  
 	<!-- shared libraries -->
 	<module file="shared/client-system.jar" version="2.56"/>
@@ -92,7 +97,6 @@ socketio.host=223.222.100.3:7080
 	<!-- plugins -->	
 	<module file="plugins/rameses-queueing.jar" version="2.55"/>
 	<module file="plugins/rameses-gov-etracs-ctc.jar" version="2.55"/> 
-	<module file="plugins/rameses-gov-etracs-vehicle.jar" version="2.8"/>  
-	<module file="plugins/rameses-gov-etracs-vehicle-tricycle.jar" version="2.8"/>  
+	<module file="plugins/rameses-gov-etracs-vehicle.jar" version="2.9"/>  
 </modules>
 </app>

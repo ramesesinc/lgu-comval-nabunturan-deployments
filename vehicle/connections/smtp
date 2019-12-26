@@ -1,0 +1,3 @@
+provider=email
+mail.smtp.host=${gdx_host}
+mail.from=filipizenmailer@gmail.com
