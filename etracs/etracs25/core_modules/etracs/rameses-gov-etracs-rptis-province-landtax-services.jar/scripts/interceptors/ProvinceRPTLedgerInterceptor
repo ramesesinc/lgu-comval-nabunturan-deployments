@@ -1,8 +1,0 @@
-import com.rameses.osiris3.xconnection.*;
-import com.rameses.annotations.*;
-import com.rameses.common.*;
-
-class ProvinceRPTLedgerInterceptor
-{   
-
-}
