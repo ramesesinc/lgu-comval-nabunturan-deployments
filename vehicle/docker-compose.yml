@@ -1,7 +1,7 @@
 version: "3"
 
   local-vehicle-server:
-    image: ramesesinc/local-vehicle-server:v002
+    image: ramesesinc/local-vehicle-server:255.01.001
     container_name: local-vehicle-server
     logging: 
       driver: "json-file"
