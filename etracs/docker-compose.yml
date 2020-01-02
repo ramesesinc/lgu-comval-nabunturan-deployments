@@ -5,7 +5,7 @@ services:
   rameses-notification-server:
     image: "ramesesinc/notification-server:1.0"
     container_name: rameses-notification-server
-
+    restart: always
     logging:
       driver: "json-file"
       options: 
@@ -19,7 +19,7 @@ services:
   download-server:
     image: nginx:latest
     container_name: download-server
-
+    restart: always
     logging:
       driver: "json-file"
       options: 
@@ -40,7 +40,7 @@ services:
   etracs25-server:
     image: ramesesinc/etracs25-server-municipality:255.01.005
     container_name: etracs25-server
-
+    restart: always
     logging:
       driver: "json-file"
       options: 
@@ -57,4 +57,5 @@ services:
       - "8080:8080"
 
     volumes:
+      - ./etracs25/connections:/apps/server/workspace/services/apps/etracs25/connections/ext
       - ./etracs25/modules:/apps/server/workspace/services/apps/etracs25/modules
