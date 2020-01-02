@@ -97,6 +97,6 @@ socketio.host=223.222.100.3:7080
 	<!-- plugins -->	
 	<module file="plugins/rameses-queueing.jar" version="2.55"/>
 	<module file="plugins/rameses-gov-etracs-ctc.jar" version="2.55"/> 
-	<module file="plugins/rameses-gov-etracs-vehicle.jar" version="2.57"/>  
+	<module file="plugins/rameses-gov-etracs-vehicle.jar" version="2.58"/>  
 </modules>
 </app>
