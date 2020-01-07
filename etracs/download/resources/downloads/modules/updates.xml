@@ -1,6 +1,6 @@
 <app>
 <env>
-app.title=ETRACS 2.5 build 05 20191218_1100 (MUNICIPALITY OF NABUNTURAN)
+app.title=ETRACS 2.5 build 05 20200107_1327 (MUNICIPALITY OF NABUNTURAN)
 app.host=223.222.100.3:8070
 app.cluster=osiris3
 app.context=etracs25
@@ -36,11 +36,11 @@ socketio.host=223.222.100.3:7080
 
 	<!-- core libraries -->
 	<module file="core/osiris2-client-themes.jar" version="2.56"/>
-	<module file="core/osiris2-client-ui.jar" version="2.56"/>
+	<module file="core/osiris2-client-ui.jar" version="2.57"/>
 	<module file="core/osiris2-draw.jar" version="2.56"/>
 	<module file="core/osiris2-framework.jar" version="2.56"/>
 	<module file="core/osiris2-report.jar" version="2.56"/>
-	<module file="core/rameses-client-ui.jar" version="2.56"/>
+	<module file="core/rameses-client-ui.jar" version="2.57"/>
 	<module file="core/rameses-client-ui-bio.jar" version="2.56"/>
 	<module file="core/rameses-client-ui-jfx.jar" version="2.56"/>
 	<module file="core/rameses-client-notification-socketio.jar" version="2.56"/>
