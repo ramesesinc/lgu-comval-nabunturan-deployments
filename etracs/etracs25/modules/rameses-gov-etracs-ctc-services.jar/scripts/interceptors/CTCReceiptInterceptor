@@ -80,10 +80,10 @@ class CTCReceiptInterceptor {
 		if ( info ) { 
 			def payer = info.remove('payer'); 
 			if ( res.payer ) res.payer.putAll( payer ); 
-
+			
 			res.putAll( info ); 
-		}
-	} 
+		} 
+	} 	
 
 	// ---------------------------------------------
 	//   CTC Corporate handlers 

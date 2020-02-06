@@ -35,7 +35,8 @@ class IndividualCTC {
         if(m.businessgross!=null) businessgross = m.businessgross;
         if(m.propertyincome!=null) propertyincome = m.propertyincome;
         if(m.barangayid!=null) barangayid = m.barangayid;
-        if(m.additional!=null) additional = m.additional;
+
+        additional = m.hasadditional.toString().matches('true|1'); 
     }
     
     public double getTotaltax() {

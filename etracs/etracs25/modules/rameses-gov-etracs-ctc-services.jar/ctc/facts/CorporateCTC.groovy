@@ -18,7 +18,8 @@ public class CorporateCTC {
         if(m.realpropertyav!=null) realpropertyav = m.realpropertyav;
         if(m.businessgross!=null) businessgross = m.businessgross;
         if(m.newbusiness!=null) newbusiness = m.newbusiness;
-        if(m.additional!=null) additional = m.additional;
+        
+        additional = m.hasadditional.toString().matches('true|1'); 
     }
 
     public double getTotaltax() {
