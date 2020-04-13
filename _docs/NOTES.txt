@@ -1,14 +1,14 @@
 [app-server]
 
-IP  : 223.222.100.3
+IP  : 223.222.100.4
 User: lgunabunturan
 Pass: p@ssw0rd
 
-Portainer-URL : https://223.222.100.3:9000
+Portainer-URL : https://223.222.100.4:9000
 Portainer-User: admin
 Portainer-Pass: p@ssw0rd
 
-Webmin-URL : https://223.222.100.3:10000
+Webmin-URL : https://223.222.100.4:10000
 Webmin-User: lgunabunturan
 Webmin-Pass: p@ssw0rd
 
