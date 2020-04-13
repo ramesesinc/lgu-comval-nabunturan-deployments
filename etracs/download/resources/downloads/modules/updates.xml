@@ -89,7 +89,7 @@ socketio.host=223.222.100.4:7080
 	<module file="rameses-gov-etracs-rptis-municipality.jar" version="2.55"/>
 	<module file="rameses-gov-etracs-rptis-landtax.jar" version="2.55"/>
 	<module file="rameses-gov-etracs-rptis-landtax-report.jar" version="2.55"/>
-	<module file="rameses-gov-etracs-rptis.jar" version="2.55"/>
+	<module file="rameses-gov-etracs-rptis.jar" version="2.56"/>
 	<module file="rameses-gov-etracs-rptis-report.jar" version="2.55"/>
 	<module file="rameses-gov-etracs-signatory-template.jar" version="2.55"/>
 	<module file="rameses-gov-etracs-rptis-transmittal.jar" version="2.55"/>
