@@ -1,26 +1,26 @@
 <app>
 <env>
 app.title=ETRACS 2.5 build 05 20200107_1327 (MUNICIPALITY OF NABUNTURAN)
-app.host=223.222.100.4:8070
+app.host=223.222.100.3:8070
 app.cluster=osiris3
 app.context=etracs25
-app.help=http://223.222.100.4:8080/help
+app.help=http://223.222.100.3:8080/help
 app.loader=com.rameses.osiris2.client.OsirisAppLoader
 readTimeout=300000
 connectionTimeout=5000
 
-ws.host=223.222.100.4:8060
-#res.host=223.222.100.4
+ws.host=223.222.100.3:8060
+#res.host=223.222.100.3
 
 #entity-service
-entity.app.host=223.222.100.4:8070
+entity.app.host=223.222.100.3:8070
 entity.app.context=etracs25
 
 #vehicle-service
-vehicle.app.host=223.222.100.4:8072
+vehicle.app.host=223.222.100.3:8072
 vehicle.app.context=enterprise
 
-socketio.host=223.222.100.4:7080
+socketio.host=223.222.100.3:7080
 
 </env>
 <modules> 
