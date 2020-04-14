@@ -46,12 +46,12 @@ public class BldgAdjustment
         entity.params?.each {
             def value = 0
             if (it.param.paramtype.matches('.*decimal.*')){
-                value = parseDouble(it.value)
+                value = parseDouble(it.value ? it.value : it.decimalvalue)
                 it.decimalvalue = value 
                 it.intvalue = null 
             }
             else {
-                value = parseInt(it.value)
+                value = parseInt(it.value ? it.value : it.intvalue)
                 it.decimalvalue = null 
                 it.intvalue = value 
             }
