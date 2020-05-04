@@ -1,3 +1,2 @@
 #!/bin/sh
-cd ~/docker && git reset --hard
-cd ~
+git reset --hard

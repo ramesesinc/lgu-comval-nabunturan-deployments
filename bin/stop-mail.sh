@@ -1,6 +1,6 @@
 #!/bin/sh
 RUN_DIR=`pwd`
-cd ../etracs
+cd ../mail
 docker-compose down
 docker system prune -f
 cd $RUN_DIR
