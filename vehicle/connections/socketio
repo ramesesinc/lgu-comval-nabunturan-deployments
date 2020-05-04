@@ -1,3 +1,0 @@
-provider=socketio
-host=${app_server_ip}
-port=7080
