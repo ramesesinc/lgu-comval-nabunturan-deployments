@@ -2,10 +2,10 @@
 select 
   t1.afid, t1.formtype, t1.denomination, t1.serieslength, 
   t1.controlid, t1.prefix, t1.suffix, t1.cost, t1.startseries, t1.endseries, t1.nextseries, 
-  min(ISNULL(t1.receivedstartseries, 999999999999)) as receivedstartseries, max(ISNULL(t1.receivedendseries,-999999999999)) as receivedendseries, sum(t1.qtyreceived) as qtyreceived, 
-  min(ISNULL(t1.beginstartseries, 999999999999)) as beginstartseries, max(ISNULL(t1.beginendseries,-999999999999)) as beginendseries, sum(t1.qtybegin) as qtybegin, 
-  min(ISNULL(t1.issuedstartseries, 999999999999)) as issuedstartseries, max(ISNULL(t1.issuedendseries,-999999999999)) as issuedendseries, sum(t1.qtyissued) as qtyissued, 
-  min(ISNULL(t1.endingstartseries, 999999999999)) as endingstartseries, max(ISNULL(t1.endingendseries,-999999999999)) as endingendseries, sum(t1.qtyending) as qtyending, 
+  min(ISNULL(t1.receivedstartseries, 999999999)) as receivedstartseries, max(ISNULL(t1.receivedendseries,-999999999)) as receivedendseries, sum(t1.qtyreceived) as qtyreceived, 
+  min(ISNULL(t1.beginstartseries, 999999999)) as beginstartseries, max(ISNULL(t1.beginendseries,-999999999)) as beginendseries, sum(t1.qtybegin) as qtybegin, 
+  min(ISNULL(t1.issuedstartseries, 999999999)) as issuedstartseries, max(ISNULL(t1.issuedendseries,-999999999)) as issuedendseries, sum(t1.qtyissued) as qtyissued, 
+  min(ISNULL(t1.endingstartseries, 999999999)) as endingstartseries, max(ISNULL(t1.endingendseries,-999999999)) as endingendseries, sum(t1.qtyending) as qtyending, 
   sum(t1.qtycancelled) as qtycancelled 
 from ( 
   select 

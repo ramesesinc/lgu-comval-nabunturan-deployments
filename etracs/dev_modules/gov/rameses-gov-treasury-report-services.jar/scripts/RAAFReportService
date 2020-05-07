@@ -66,6 +66,8 @@ class RAAFReportService {
 	 		buildRAAFNonSerial( items, nonserials );		
 		}
 
+		if ( items.isEmpty()) throw new Exception('No record(s) found');
+
 		items.sort{ it.lineno } 	
 		items.each{
 			it.qtyreceived = (it.qtyreceived ? it.qtyreceived : null); 
@@ -73,6 +75,7 @@ class RAAFReportService {
 			it.qtyissued = (it.qtyissued ? it.qtyissued : null); 
 			it.qtyending = (it.qtyending ? it.qtyending : null); 
 		}
+
 
 		def data = [:]
 		data.items = items;

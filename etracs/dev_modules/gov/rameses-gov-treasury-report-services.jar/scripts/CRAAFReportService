@@ -188,6 +188,9 @@ class CRAAFReportService {
 			list << fo; 
 		} 
 		unissuedlist.clear(); 
+
+		if ( list.isEmpty()) throw new Exception('No record(s) found');
+
 		list.sort{ it.lineno } 
 		return list;  
 	} 
@@ -268,12 +271,14 @@ class CRAAFReportService {
 			fo.endingendseries = endingendseries; 
 			fo.endingstartseries = endingstartseries; 
 
-			if ( fo.qtyreceived == 0 ) fo.qtyreceived = null; 
-			if ( fo.qtybegin == 0 ) fo.qtybegin = null; 
-			if ( fo.qtyissued == 0 ) fo.qtyissued = null; 
-			if ( fo.qtyending == 0 ) fo.qtyending = null; 
+			if ((fo.qtyreceived + fo.qtybegin + fo.qtyissued + fo.qtyending) > 0) {
+				if ( fo.qtyreceived == 0 ) fo.qtyreceived = null; 
+				if ( fo.qtybegin == 0 ) fo.qtybegin = null; 
+				if ( fo.qtyissued == 0 ) fo.qtyissued = null; 
+				if ( fo.qtyending == 0 ) fo.qtyending = null; 
 
-			results << fo; 
+				results << fo; 
+			}
 		}
 		return results;
 	}	
