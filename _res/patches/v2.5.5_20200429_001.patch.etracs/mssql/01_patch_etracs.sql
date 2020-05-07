@@ -1,13 +1,12 @@
-update 
-	af_control_detail aa, ( 
+update aa set 
+	aa.receivedstartseries = bb.issuedstartseries, aa.receivedendseries = bb.issuedendseries, aa.qtyreceived = bb.qtyissued, 
+	aa.issuedstartseries = null, aa.issuedendseries = null, aa.qtyissued = 0 
+from af_control_detail aa, ( 
 		select objid, issuedstartseries, issuedendseries, qtyissued 
 		from af_control_detail d 
 		where d.reftype = 'ISSUE' and d.txntype = 'COLLECTION' 
 			and d.qtyreceived = 0 
 	)bb 
-set 
-	aa.receivedstartseries = bb.issuedstartseries, aa.receivedendseries = bb.issuedendseries, aa.qtyreceived = bb.qtyissued, 
-	aa.issuedstartseries = null, aa.issuedendseries = null, aa.qtyissued = 0 
 where aa.objid = bb.objid 
 ; 
 
@@ -21,31 +20,33 @@ update af_control_detail set endingstartseries = null where endingstartseries = 
 update af_control_detail set endingendseries = null where endingendseries = 0 ; 
 
 
-update 
-	af_control_detail aa, ( 
+update aa set 
+	aa.remarks = 'COLLECTION' 
+from af_control_detail aa, ( 
 		select d.objid 
 		from af_control_detail d 
 			inner join af_control a on a.objid = d.controlid 
 		where d.reftype = 'ISSUE' and d.txntype = 'COLLECTION' 
 			and d.remarks = 'SALE' 
 	)bb 
-set aa.remarks = 'COLLECTION' 
 where aa.objid = bb.objid 
 ;
 
-update 
-	af_control_detail aa, ( 
+update aa set 
+	aa.beginstartseries = bb.receivedstartseries, aa.beginendseries = bb.receivedendseries, aa.qtybegin = bb.qtyreceived, 
+	aa.receivedstartseries = null, aa.receivedendseries = null, aa.qtyreceived = 0 
+from af_control_detail aa, ( 
 		select rd.objid, rd.receivedstartseries, rd.receivedendseries, rd.qtyreceived 
 		from ( 
 			select tt.*, (
-					select objid from af_control_detail 
+					select top 1 objid from af_control_detail 
 					where controlid = tt.controlid and reftype in ('ISSUE','MANUAL_ISSUE') 
-					order by refdate, txndate, indexno limit 1 
+					order by refdate, txndate, indexno 
 				) as pdetailid, (
-					select objid from af_control_detail 
+					select top 1 objid from af_control_detail 
 					where controlid = tt.controlid and refdate = tt.refdate 
 						and reftype = tt.reftype and txntype = tt.txntype and qtyreceived > 0 
-					order by refdate, txndate, indexno limit 1 
+					order by refdate, txndate, indexno 
 				) as cdetailid 
 			from ( 
 				select d.controlid, d.reftype, d.txntype, min(d.refdate) as refdate  
@@ -58,9 +59,6 @@ update
 			inner join af_control_detail pd on pd.objid = tt.pdetailid 
 		where pd.refdate <> rd.refdate 
 	)bb 
-set 
-	aa.beginstartseries = bb.receivedstartseries, aa.beginendseries = bb.receivedendseries, aa.qtybegin = bb.qtyreceived, 
-	aa.receivedstartseries = null, aa.receivedendseries = null, aa.qtyreceived = 0 
 where aa.objid = bb.objid 
 ;
 
