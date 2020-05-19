@@ -17,5 +17,9 @@ services:
     ports: 
       - "8072:8070"
     volumes:
-      - ../_res/connections:/apps/etracs25/connections/ext
+      - ../_res/connections:/apps/server/services/apps/enterprise/connections/ext
       - ./vehicleds:/apps/server/services/datasources/mainds
+
+      - ./dev_lib/rameses-common2.jar:/apps/server/lib/rameses-common2.jar
+      - ./dev_lib/rameses-osiris3-core2.jar:/apps/server/lib/rameses-osiris3-core2.jar
+      - ./dev_lib/rameses-osiris3-server.jar:/apps/server/lib/rameses-osiris3-server.jar
