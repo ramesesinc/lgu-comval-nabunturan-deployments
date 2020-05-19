@@ -56,9 +56,19 @@ class CRAAFReportService {
 			o.lineno = idx; 
 			o.formno = o.afid;
 
-			if ( o.qtyissued==null || o.qtyissued==0 ) {
+			if ( !o.qtyreceived ) o.qtyreceived = 0; 
+			if ( !o.qtybegin ) o.qtybegin = 0; 
+			if ( !o.qtyissued ) o.qtyissued = 0; 
+			if ( !o.qtyending ) o.qtyending = 0; 
+
+			if ((o.qtyreceived + o.qtybegin + o.qtyissued + o.qtyending) == 0) {
+				// not a valid record and will ignore this entry
+				return; 
+			}
+
+			if ( o.qtyissued == 0 ) { 
 				unissuedlist << o; 
-			} else {
+			} else { 
 				issuedlist << o;
 			}
 
@@ -247,6 +257,7 @@ class CRAAFReportService {
 				fo.issuedendseries = issuedendseries; 
 				fo.issuedstartseries = issuedstartseries; 
 				fo.qtyissued = vv.findAll{ it.qtyissued > 0 }.sum{ it.qtyissued } 
+				fo.qtyissued = (fo.qtyissued ? fo.qtyissued : 0);
 			} else {
 				fo.issuedstartseries = fo.issuedendseries = null; 
 				fo.qtyissued = 0;

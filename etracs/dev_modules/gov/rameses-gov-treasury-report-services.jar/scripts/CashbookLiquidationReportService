@@ -19,6 +19,8 @@ class CashbookLiquidationReportService {
 		result.items = reportdb.getDetails( params.filter ); 
 
 		def header = params.remove('header'); 
+		header.BEGBALDR = header.BEGBALCR = header.BEGBALANCE = 0.0; 
+
 		def balinfo = reportdb.findBeginBalance( params.filter ); 
 		if ( balinfo?.balance ) { 
 			header.BEGBALDR = (balinfo.dr ? balinfo.dr : 0.0);

@@ -79,8 +79,8 @@ vehicle.app.context=enterprise
 	<!-- treasury -->	
 	<module file="treasury/rameses-treasury-common.jar" version="2.57"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.56"/>
-	<module file="treasury/rameses-gov-treasury.jar" version="2.58"/>
-	<module file="treasury/rameses-gov-treasury-report.jar" version="2.58"/>
+	<module file="treasury/rameses-gov-treasury.jar" version="2.59"/>
+	<module file="treasury/rameses-gov-treasury-report.jar" version="2.59"/>
 	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.56"/>
 
 	<!-- bpls -->
