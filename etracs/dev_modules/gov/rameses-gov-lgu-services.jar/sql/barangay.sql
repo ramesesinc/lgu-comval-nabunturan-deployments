@@ -99,7 +99,7 @@ LEFT JOIN district d ON b.parentid = d.objid
 LEFT JOIN city c ON d.parentid = c.objid 
 LEFT JOIN municipality m ON b.parentid = m.objid 
 LEFT JOIN province p ON m.parentid = p.objid 
-WHERE (c.objid LIKE $P{rootid}  OR m.objid LIKE $P{rootid}) 
+WHERE (d.objid LIKE $P{parentid}  OR m.objid LIKE $P{parentid}) 
 ORDER BY b.name 
 
 

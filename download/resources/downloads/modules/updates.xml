@@ -91,7 +91,7 @@ vehicle.app.context=enterprise
 	<!-- rptis -->
 	<module file="rptis/rameses-gov-etracs-rptis-landtax.jar" version="2.55"/>
 	<module file="rptis/rameses-gov-etracs-rptis-landtax-report.jar" version="2.55"/>
-	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.57"/>
+	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.58"/>
 	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.55"/>
 	<module file="rptis/rameses-gov-etracs-rptis-transmittal.jar" version="2.55"/>
 	<module file="rptis/rameses-gov-etracs-rptis-municipality.jar" version="2.55"/>
