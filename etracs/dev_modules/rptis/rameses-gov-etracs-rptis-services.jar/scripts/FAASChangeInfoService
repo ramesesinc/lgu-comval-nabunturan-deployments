@@ -36,6 +36,9 @@ class FAASChangeInfoService
 	@Service('DBImageService')
 	def imageSvc 
 
+	@Service('RPTRedFlagService')
+	def redFlagSvc
+
 
 
 	@ProxyMethod
@@ -75,10 +78,6 @@ class FAASChangeInfoService
         	def imageids = em.getImageIds(redflag)
         	if (imageids){
 	            changeinfo.requirement = reqSvc.open(imageids[0])
-        		def images = imageSvc.getImages([refid:imageids[0].objid])
-        		if (images){
-	            	changeinfo.image = supportSvc.getImageByIds(images.objid)
-        		}
         	}
         }
         else if (changeinfo.action == 'change_faas_sketch'){

@@ -19,7 +19,7 @@
 		<field name="dtcreated" type="timestamp" />
 		<field name="rpumaster_objid" />
 		<complex name="parent" ref="faas" jointype="many-to-one" required="true"
-			includefields="tdno,fullpin,owner_name,rpuid">
+			includefields="tdno,fullpin,owner_name,rpuid,lguid,originlguid">
 			<key field="parent_objid" target="objid" />
 		</complex>
 		<complex name="restrictiontype" ref="faas_restriction_type" jointype="many-to-one" required="true">

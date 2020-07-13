@@ -9,6 +9,9 @@ class ConsolidationService
 	@ActiveDB('consolidation')
    def em
 
+   @DataContext('consolidation')
+   def em_consolidation
+
 	@Env
 	def env
 	
@@ -54,6 +57,9 @@ class ConsolidationService
     @DataContext('faas_previous')
     def em_faas_previous 
 
+    @DataContext('consolidation_task')
+    def em_task
+
     @DataContext('faas_task')
     def em_faas_task
 
@@ -70,6 +76,7 @@ class ConsolidationService
     def STATE_INTERIM               = 'INTERIM'
     
     def TXNTYPE_CS = 'CS'
+    def TXNTYPE_DP = 'DP'
 
 	@ProxyMethod
     public def getList( params ) {
@@ -125,10 +132,11 @@ class ConsolidationService
             consolidation.txnno = util.getNextSequence('CONSOLIDATION')
         if (!consolidation.lguid)
             consolidation.lguid = env.ORGID 
+        consolidation.state = STATE_DRAFT
         consolidation.originlguid = (consolidation.originlguid ? consolidation.originlguid : env.ORGID )
         consolidation.txndate = pdate.date 
         consolidation.txntype = faasSvc.getTxnType(TXNTYPE_CS)
-        createConsolidatedFaas(consolidation)
+        consolidation.ry = util.toInteger(var.current_ry)
         em.create(consolidation)
         return consolidation            
     }    
@@ -161,8 +169,12 @@ class ConsolidationService
                 faasSvc.deleteFaasById(arpu.newfaasid)
 
             if (arpu.newrpuid) {
-                rpu = rpuSvc.openRpu([objid:arpu.newrpuid])
-                if (rpu ) rpuSvc.deleteRpu(rpu)
+                try {
+                    rpu = rpuSvc.openRpu([objid:arpu.newrpuid])
+                    if (rpu ) rpuSvc.deleteRpu(rpu)
+                } catch( e ) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -304,6 +316,7 @@ class ConsolidationService
                 pf.totalareasqm = it.rpu.totalareasqm 
                 pf.totalareaha = it.rpu.totalareaha 
                 pf.effectivityyear = it.effectivityyear 
+                pf.taxable = it.taxable
                 pfs << pf 
             }
             faas.prevtdno = clands.faas.tdno.join(', ')
@@ -323,8 +336,6 @@ class ConsolidationService
 
     @ProxyMethod
     public void initApprove(consolidation) {
-        em.deleteConsolidatedPreviousFaas(consolidation)
-        em.insertConsolidatedPreviousFaas(consolidation)
     }
 
     @ProxyMethod
@@ -408,7 +419,8 @@ class ConsolidationService
     }    
 
 
-    void createConsolidatedFaas(consolidation){
+    @ProxyMethod
+    public def createConsolidatedFaas(consolidation){
         def info = consolidation._info 
         info.txntype = consolidation.txntype 
         def faas = faasSvc.initCapture(buildInitInfo(info))
@@ -418,6 +430,8 @@ class ConsolidationService
         consolidation.newrpuid = faas.rpu.objid
         consolidation.newfaasid = faas.objid 
         consolidation.lguid = faas.lguid 
+        em_consolidation.update(consolidation)
+        return [faas: faas, consolidation: open(consolidation)]
     }
 
     def buildInitInfo(info){
@@ -549,12 +563,19 @@ class ConsolidationService
         pf.totalareasqm = faas.rpu.totalareasqm 
         pf.totalareaha = faas.rpu.totalareaha 
         pf.effectivityyear = faas.effectivityyear      
+        pf.taxable = faas.rpu.taxable
 
         faas.prevtdno = faas.tdno
         faas.objid = 'F' + arpu.objid 
         faas.previousfaases = faasSvc.buildPreviousFaases(faas, [pf])
         faas.state = STATE_PENDING
-        faas.txntype  = faasSvc.getTxnType(TXNTYPE_CS)
+
+        if ( util.toBoolean(var.faas_affected_rpu_txntype_dp, false) == true) {
+            faas.txntype  = faasSvc.getTxnType(TXNTYPE_DP)
+        } else {
+            faas.txntype  = faasSvc.getTxnType(TXNTYPE_CS)
+        }
+
         faas.effectivityyear = pdate.year
         faas.effectivityqtr = pdate.qtr
         faas.datacapture = 0
@@ -573,14 +594,23 @@ class ConsolidationService
 
     @ProxyMethod
     public void insertFaasSignatories(consolidation) {
-        em_faas_task.find([refid: consolidation.newfaasid]).delete()
+        def _taskid = consolidation._taskid
+        def currTask = em_task.find([objid: _taskid]).first()
+        if (!currTask) return 
+
+        faasSvc.insertOnlineFaasSignatory([
+            taskid: _taskid,
+            faasid: consolidation.newfaasid, 
+            task: currTask
+        ])
 
         em_affectedrpu.find([consolidationid: consolidation.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid,
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
-
-        em.insertConsolidatedFaasSignatories(consolidation)
-        em.insertAffectedRpuSignatories(consolidation)
     }
 
 

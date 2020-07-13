@@ -81,18 +81,27 @@ class ConsolidationSupportService
     public def getApprovedFaas(faas) {
         def data = faasSvc.openFaas(faas)
         data.taxpayer = entitySvc.open(data.taxpayer)
-        data.tasks = em_faas_task.where('refid = :objid and enddate is not null', data).list()
+        faas.tasks = em_faas_task.where('refid = :refid AND enddate IS NOT NULL', [refid: faas.objid]).list()
         return data
     }
 
     @ProxyMethod
     public void postApprovedFaas(faas) {
         def oldfaas = faasSvc.findFaasById(faas.objid)
-        if (oldfaas && oldfaas.state != 'CURRENT'){
-            faas.state = 'PENDING'
-            saveFaas(faas)
+        if (oldfaas && oldfaas.state == 'CURRENT'){
+            saveFaasTask(faas)
+            return
         }
+        faas.state = 'PENDING'
+        saveFaas(faas)
+        saveFaasTask(faas)
     }
+
+    void saveFaasTask(faas) {
+        faas.tasks.each{
+            em_faas_task.save(it)
+        }
+    }    
 
     @ProxyMethod
     public def getApprovedConsolidation(consolidation) {

@@ -86,6 +86,7 @@ class SubdivisionSupport2Service
     public def getApprovedFaas(faas){
         faas = faasSvc.openFaas(faas)
         faas.taxpayer = entitySvc.open(faas.taxpayer)
+        faas.tasks = em_faas_task.where('refid = :refid AND enddate IS NOT NULL', [refid: faas.objid]).list()
         return faas
 
     }
@@ -93,10 +94,20 @@ class SubdivisionSupport2Service
     @ProxyMethod
     public def postApprovedFaas(faas){
         def currfaas = em_faas.select('state').find([objid:faas.objid]).first()
-        if (currfaas && currfaas.state == 'CURRENT') return
-        faas.state = 'PENDING';
+        if (currfaas && currfaas.state == 'CURRENT') {
+            saveFaasTask(faas)
+            return
+        }
+        faas.state = 'PENDING'
         postFaasData(faas)
         faasSvc.approveFaas(faas)
+        saveFaasTask(faas)
+    }
+
+    void saveFaasTask(faas) {
+        faas.tasks.each{
+            em_faas_task.save(it)
+        }
     }
 
     @ProxyMethod

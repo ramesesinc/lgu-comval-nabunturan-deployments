@@ -107,6 +107,8 @@ union
 select lguid from consolidation where objid = $P{refid}
 union 
 select lgu_objid as lguid from resection where objid = $P{refid}
+union 
+select lgu_objid as lguid from batchgr where objid = $P{refid}
 
 
 	

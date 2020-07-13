@@ -13,6 +13,9 @@
 		<field name="orno" />
 		<field name="ordate" />
 		<field name="oramount" type="decimal"  />
+		<complex name="annotation" ref="faasannotation" jointype="many-to-one" required="false" includefields="faas.*">
+			<key field="annotationid" target="objid" />
+		</complex>
 	</element>
 </schema>
 

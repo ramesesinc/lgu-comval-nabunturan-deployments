@@ -19,6 +19,16 @@ class DBImageService
 	def logSvc 
 
 
+
+	@ProxyMethod
+	public def resendImage(params) {
+		if (!params.refid) throw new Exception('refid must be specified')
+		if (!params.lguid) throw new Exception('lguid must be specified')
+		
+		return params;
+	}
+
+
 	@ProxyMethod
 	public def saveHeader( image ) {
 		em.save(image);

@@ -88,7 +88,7 @@ class FAASWorkflowService extends ActiveWorkflowService
 	}
 
 	public void afterLoadTask(Object newTask) {
-		newTask.transitions.findAll{ it.action.toString().matches('submit.*|send.*')}.each{t ->
+		newTask.transitions.findAll{ it.action.toString().matches('approve.*|submit.*|send.*')}.each{t ->
 			if (t.properties?.targetrole) {
 				def params = [role: t.properties.targetrole]
 				t.assignees = taskDB.getTargetAssignees(params)

@@ -36,9 +36,6 @@ class FAASService
 	@DataContext('faas_task')
 	def em_faas_task 
 
-	@DataContext('faasupdate')
-	def em_faas_update
-
 	@DataContext('faas_restriction')
 	def em_restriction
 
@@ -289,7 +286,6 @@ class FAASService
 		txnRef.delete(faas.objid)
 		em_faas_signatory.delete(faas)
 		em_faas_task.find([refid:faas.objid]).delete()
-		em_faas_update.find([faasid:faas.objid]).delete()
 		em_stewardship.find([stewardrpumasterid:faas.rpu.rpumasterid]).delete()
 
 		def affectedrpus = em_faas.getAffectedRpus(faas)
@@ -598,6 +594,8 @@ class FAASService
 
 	@ProxyMethod
     public void updateSignatoryInfo(task) {
+    	if (!task)
+    		return
         if (task.state.matches('assign.*') || env.action?.matches('return.*'))
             return 
         if (!task.state.matches('taxmapper|taxmapper_chief|appraiser|appraiser_chief|provrecommender|recommender|approver|provtaxmapper|provtaxmapperchief|provappraiser|provappraiserchief|reviewer'))
@@ -876,7 +874,7 @@ class FAASService
 	}
 
     void checkTxnReference(faas){
-		if (faas.previousfaases && ! faas.txntype.objid.matches('SD|CS') && (faas._checkTxnRef == null || faas._checkTxnRef == true)){
+		if (faas.previousfaases && ! faas.txntype.objid.matches('SD|CS|DP') && (faas._checkTxnRef == null || faas._checkTxnRef == true)){
 			def prevfaasid = faas.previousfaases[0].prevfaasid
 			txnRef.checkReference(prevfaasid)
 		}
@@ -884,12 +882,14 @@ class FAASService
 
 
 	void insertTxnReference(faas){
-		if (faas.previousfaases &&  ! faas.txntype.objid.matches('SD|CS')){
-			def prevfaasid = faas.previousfaases[0].prevfaasid
-			if (prevfaasid){
-				def refno = ( faas.tdno == null ? 'Doc No. ' + faas.utdno : 'TD No. ' + faas.tdno  ) 
-				txnRef.insert([objid:prevfaasid, refid:faas.objid, msg:'FAAS is currently referenced by ' + refno ])
-			}
+		if (!faas.previousfaases) return
+		if (faas.txntype.objid.matches('SD|CS|DP')) return
+		if (faas._options && faas._options.txntype.toString().matches('SD|CS|RS')) return
+
+		def prevfaasid = faas.previousfaases[0].prevfaasid
+		if (prevfaasid){
+			def refno = ( faas.tdno == null ? 'Doc No. ' + faas.utdno : 'TD No. ' + faas.tdno  ) 
+			txnRef.insert([objid:prevfaasid, refid:faas.objid, msg:'FAAS is currently referenced by ' + refno ])
 		}
 	}	
 
@@ -917,15 +917,20 @@ class FAASService
 	public void cancelPreviousFaases(faas){
 		def pdate = dtSvc.parseDate(faas.approver.dtsigned, null)
 		em_faas_previous.where('faasid = :faasid and prevfaasid is not null', [faasid:faas.objid]).list().each{
-			def params = [
-				objid  				: it.prevfaasid,
-				rpuid 				: it.prevrpuid, 
-				txntype 			: faas.txntype,
-				cancelreason		: faas.txntype.displaycode,
-				canceldate			: faas.approver.dtsigned,
-				cancelledbytdnos	: faas.tdno,
-			]
-			cancelFaas(params)
+			if (!it.prevfaasid) {
+				it.prevfaasid = em_faas.select('objid').find([tdno: it.prevtdno]).first()?.objid 
+			}
+			if (it.prevfaasid) {
+				def params = [
+					objid  				: it.prevfaasid,
+					rpuid 				: it.prevrpuid, 
+					txntype 			: faas.txntype,
+					cancelreason		: faas.txntype.displaycode,
+					canceldate			: faas.approver.dtsigned,
+					cancelledbytdnos	: faas.tdno,
+				]
+				cancelFaas(params)
+			}
 		}
 
 		if (faas.backtaxes){
@@ -1053,6 +1058,7 @@ class FAASService
 				rpuSvc.createRpu(faas.rpu)
 			}
 			catch(e){
+				e.printStackTrace()
 				rpuSvc.updateRpu(faas.rpu)	
 			}
 		}
@@ -1095,6 +1101,7 @@ class FAASService
             pf.prevareasqm = numSvc.format('#,##0.00', it.totalareasqm)
             pf.prevareaha = numSvc.format('#,##0.000000', it.totalareaha)
             pf.preveffectivity = it.effectivityyear
+            pf.prevtaxability = util.isTrue(it.taxable) ? 'TAXABLE' : 'EXEMPT'
             prevfaases << pf 
         }
         return prevfaases 
@@ -1120,6 +1127,7 @@ class FAASService
 		pf.totalareasqm = newfaas.rpu.totalareasqm 
 		pf.totalareaha = newfaas.rpu.totalareaha 
 		pf.effectivityyear = newfaas.effectivityyear 
+		pf.taxable = newfaas.rpu.taxable
 		newfaas.previousfaases  = buildPreviousFaases([objid:newid], [pf])
 
 		newfaas.state 			= STATE_INTERIM
@@ -1319,5 +1327,26 @@ class FAASService
     	info.assignee = null
     	em_faas_list.find([objid: entity.objid]).update(info)
     }
+
+    /* params: 
+    * taskid - the original task.objid 
+    * task - the current task to insert
+    * faasid - the faas.objid to add task to
+    */
+    @ProxyMethod
+    public void insertOnlineFaasSignatory(params) {
+        if (!params.faasid) return
+    	def currTask = params.task
+
+        def newfaas = em_faas.select('utdno').find([objid: params.faasid]).first()
+        if (newfaas) {
+	        currTask.objid = params.taskid + newfaas.utdno
+	        currTask.refid = params.faasid
+        	em_faas_task.find([objid: currTask.objid]).delete()
+	        em_faas_task.create(currTask)
+        }
+    }
+
+
 }
 

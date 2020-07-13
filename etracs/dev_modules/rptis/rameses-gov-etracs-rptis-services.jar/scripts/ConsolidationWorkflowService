@@ -95,12 +95,14 @@ class ConsolidationWorkflowService extends ActiveWorkflowService
 
 	public void beforeCloseTask(task) {
 		if (env.data.manualapprover){
+			task.enddate = env.data.manualapprover.dtsigned
 			task.actor = env.data.manualapprover
 		}
 	}	
 
 	public void afterCloseTask(task) {
 		if (!task.state.matches('assign.*')){
+			env.data._taskid = task.objid
         	consolidationSvc.insertFaasSignatories(env.data)
 		}
 		consolidationSvc.updateSignatories(task)

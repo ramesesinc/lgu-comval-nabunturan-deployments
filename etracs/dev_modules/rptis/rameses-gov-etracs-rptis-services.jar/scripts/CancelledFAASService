@@ -78,7 +78,9 @@ class CancelledFAASService
 
     @ProxyMethod
     public def create(entity){
-        txnRef.checkReference(entity.faas.objid)
+        if (!entity._options || entity._options.checkreference) {
+            txnRef.checkReference(entity.faas.objid)
+        }
         validateFaas(entity.faas)
         entity.faasid = entity.faas.objid 
         if (!entity.lguid)
@@ -326,7 +328,8 @@ class CancelledFAASService
     *   - cancel the ledger if fullypaid as of txndate
     *   - terminate the corresponding ledger faas history set toyear = year(txndate) and toqtr = 4 
     =========================================*/
-    void postLedgerCancellation(entity){
+    @ProxyMethod
+    public void postLedgerCancellation(entity){
         def ledger = em_rptledger.select('objid,lastyearpaid,lastqtrpaid').find([faasid:entity.faas.objid]).first()
         if (!ledger) 
             return 

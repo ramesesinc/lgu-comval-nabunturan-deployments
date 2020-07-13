@@ -20,12 +20,12 @@ SELECT
 	tsk.state AS taskstate,
 	tsk.assignee_objid 
 FROM consolidation c
-	INNER JOIN faas f ON c.newfaasid = f.objid 
-	INNER JOIN rpu r ON c.newrpuid = r.objid 
-	INNER JOIN realproperty rp ON c.newrpid = rp.objid 
+	LEFT JOIN faas f ON c.newfaasid = f.objid 
+	LEFT JOIN rpu r ON c.newrpuid = r.objid 
+	LEFT JOIN realproperty rp ON c.newrpid = rp.objid 
 	LEFT JOIN consolidation_task tsk ON c.objid = tsk.refid AND tsk.enddate IS NULL
 where c.lguid LIKE $P{lguid} 
-   and rp.barangayid like $P{barangayid}
+   and (rp.barangayid is null or rp.barangayid like $P{barangayid})
    and c.state LIKE $P{state}
    and (c.txnno like $P{searchtext} or f.tdno like $P{searchtext} or rp.pin like $P{searchtext} or f.name like $P{searchtext})
 	${filters}	
@@ -61,10 +61,10 @@ SELECT c.*,
 	tsk.state AS taskstate,
 	tsk.assignee_objid 
 FROM consolidation c
-	INNER JOIN faas f ON c.newfaasid = f.objid 
-	INNER JOIN realproperty rp ON c.newrpid = rp.objid 
-	INNER JOIN rpu r ON c.newrpuid = r.objid 
-	INNER JOIN barangay b on rp.barangayid = b.objid 
+	LEFT JOIN faas f ON c.newfaasid = f.objid 
+	LEFT JOIN realproperty rp ON c.newrpid = rp.objid 
+	LEFT JOIN rpu r ON c.newrpuid = r.objid 
+	LEFT JOIN barangay b on rp.barangayid = b.objid 
 	LEFT JOIN propertyclassification pc ON r.classification_objid = pc.objid 
 	LEFT JOIN consolidation_task tsk ON c.objid = tsk.refid AND tsk.enddate IS NULL
 WHERE c.objid = $P{objid}	
@@ -83,6 +83,7 @@ SELECT cl.*,
 	r.totalav AS rpu_totalav,
 	r.totalareaha AS rpu_totalareaha,
 	r.totalareasqm AS rpu_totalareasqm,
+	r.taxable AS rpu_taxable,
 	rp.barangayid,
 	rp.lguid,
 	rp.lgutype
@@ -387,10 +388,6 @@ WHERE s.objid = $P{consolidationid}
   AND f.state = 'PENDING' 
 
 
-[deletePreviousFaases]  
-DELETE FROM previousfaas WHERE faasid = $P{faasid}
-
-
 [deleteTasks]
 DELETE FROM consolidation_task WHERE refid = $P{objid}
 
@@ -458,19 +455,6 @@ from consolidation c
     inner join consolidation_task t on c.objid = t.refid 
 where c.objid = $P{objid}
   and t.state not like 'assign%'
-
-
-[deleteConsolidatedPreviousFaas]
-delete from previousfaas where faasid = $P{newfaasid} 
-
-
-[insertConsolidatedPreviousFaas]
-insert into previousfaas 
-	(faasid, prevfaasid)
-select c.newfaasid, cl.landfaasid 
-from consolidation c 
-	inner join consolidatedland cl on c.objid = cl.consolidationid 
-where consolidationid = $P{objid}	
 
 
 [getTasks]

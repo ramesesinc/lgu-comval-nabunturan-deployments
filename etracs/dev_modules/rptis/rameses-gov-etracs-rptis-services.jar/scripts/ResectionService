@@ -282,13 +282,39 @@ class ResectionService
 
     @ProxyMethod
     public void insertFaasSignatories(entity) {
-        em_resection.deleteFaasTasks(entity)
-        em_resection.insertFaasSignatories(entity)
+        def _taskid = entity._taskid
+    	def currTask = em_task.find([objid: _taskid]).first()
+        if (!currTask) return 
+
+    	def items = em_resection_item.find([parent_objid: entity.objid]).list()
+    	items.each {
+    		faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaas?.objid, 
+                task: currTask
+            ])
+    	}
     }
 
 	@ProxyMethod
 	public void updateSignatories(task) {
-		//TODO:
+		if (task.state.matches('assign.*') || env.action?.matches('return.*'))
+            return;
+
+        def t = [
+            objid       : task.objid,
+            refid       : task.refid,
+            state       : task.state, 
+            action      : task.action, 
+            actor       : task.actor, 
+            enddate     : task.enddate,
+        ]
+
+        def items = em_resection_item.find([parent_objid: task.refid]).list()
+        items.each {
+            t.refid = it.newfaas.objid
+            faasSvc.updateSignatoryInfo(t)
+        }
 	}
 
 

@@ -131,9 +131,9 @@ update fl set
 	fl.cancelreason = f.cancelreason,
 	fl.cancelledbytdnos = f.cancelledbytdnos,
 	fl.yearissued = f.year,
-	fl.taskid = (select objid from faas_task where refid = f.objid and enddate is null),
-	fl.taskstate = (select state from faas_task where refid = f.objid and enddate is null),
-	fl.assignee_objid = (select assignee_objid from faas_task where refid = f.objid and enddate is null)
+	fl.taskid = (select top 1 objid from faas_task where refid = f.objid and enddate is null),
+	fl.taskstate = (select top 1 state from faas_task where refid = f.objid and enddate is null),
+	fl.assignee_objid = (select top 1 assignee_objid from faas_task where refid = f.objid and enddate is null)
 from faas_list fl
 	inner join faas f on fl.objid = f.objid 
 	inner join rpu r on fl.rpuid = r.objid 

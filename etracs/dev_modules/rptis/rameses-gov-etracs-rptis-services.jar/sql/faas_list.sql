@@ -128,9 +128,9 @@ update faas_list fl, faas f, rpu r, realproperty rp, propertyclassification pc s
 	fl.cancelreason = f.cancelreason,
 	fl.cancelledbytdnos = f.cancelledbytdnos,
 	fl.yearissued = f.year,
-	fl.taskid = (select objid from faas_task where refid = f.objid and enddate is null),
-	fl.taskstate = (select state from faas_task where refid = f.objid and enddate is null),
-	fl.assignee_objid = (select assignee_objid from faas_task where refid = f.objid and enddate is null)
+	fl.taskid = (select objid from faas_task where refid = f.objid and enddate is null limit 1),
+	fl.taskstate = (select state from faas_task where refid = f.objid and enddate is null limit 1),
+	fl.assignee_objid = (select assignee_objid from faas_task where refid = f.objid and enddate is null limit 1)
 where fl.objid = $P{objid}	
  	and fl.objid = f.objid 
 	and f.rpuid = r.objid 
