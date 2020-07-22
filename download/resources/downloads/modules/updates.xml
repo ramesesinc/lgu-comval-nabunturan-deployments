@@ -29,7 +29,7 @@ vehicle.app.context=enterprise
 	<module file="custom/gov-lgu-nabunturan-rptis-report.jar" version="1.4"/>
 	<module file="custom/gov-lgu-nabunturan-rptis-tdreport.jar" version="1.0"/>
 	<module file="custom/gov-lgu-nabunturan-bpls.jar" version="1.4"/>
-	<module file="custom/gov-lgu-nabunturan-main.jar" version="1.4"/>
+	<module file="custom/gov-lgu-nabunturan-main.jar" version="1.5"/>
     <module file="custom/gov-lgu-nabunturan-treasury.jar" version="1.1"/>
 	<module file="custom/rameses-gov-etracs-vehicle-nabunturan.jar" version="1.0"/>
 
