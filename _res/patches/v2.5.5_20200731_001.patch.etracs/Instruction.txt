@@ -1,0 +1,27 @@
+V255-03023 (landtax)
+==================================
+
+1. Stop etracs25 container
+
+2. Backup etracs255 database
+
+3. Open SQLYog and execute "mysql/01_patch_etracs.sql" script
+
+4. Restart etracs25 container
+
+5. Open "RPTCollection - repost lgu shares.sql" in SQLYog.
+  	5.1. Change the following: 
+  			FROMDATE => 	2020-04-01
+  			TODATE   =>		2020-05-01
+
+  	5.2. Execute to repost. 
+
+  	5.3. Wait until reposting is completed, zero count. 
+  	     Use the script below to check for the progress.
+
+  	     select count(*) from cashreceipt_rpt_share_forposting
+
+  	5.4. After reposting, verify Realty Tax Collection Report
+  	     for the month reposted.
+
+  	5.5. Repeat 5.1. to 5.4 to rebuild shares of any period.
