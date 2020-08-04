@@ -10,6 +10,12 @@ class RPTCompromiseUtilService
 	@ActiveDB('rptcompromise_util')
 	def em
 
+	@DataContext('rptcompromise')
+	def em_compromise
+
+	@DataContext('rptcompromise_item')
+	def em_compromise_item
+
 
 	@ProxyMethod
 	public void repostPaymentByTxnno(params) {
@@ -27,62 +33,63 @@ class RPTCompromiseUtilService
 
 		def payment = pmt.amtpaid 
 		
+		em_compromise.find([objid: compromise.objid]).update([amtpaid: payment])
+
 		def items = em.getItems(compromise)
-		if (items){
-			for(int i = 0; i < items.size(); i++){
-				def item = items[i]
-				if (item.total <= payment){
-					em.updateFullyPaidItem(item)
-					payment -= item.total
-				}
-				else if(payment != 0) {
-					computePartialPayment(payment, item)
-					em.updatePartialledItem(item)
-					payment = 0
-				}
+		if (!items) return
 
-				if(payment == 0) break
+		def years = items.year.unique()
+		def yrgroups = items.groupBy{ it.year }
+
+		for (int i = 0; i < years.size(); i++) {
+			def yritems = yrgroups[years[i]]
+			def yrtotal = yritems.total.sum()
+			if (payment >= yrtotal) {
+				postPayments(yritems)
+				payment -= yrtotal
+			} else if (payment != 0) {
+				buildPartialPayment(yritems, payment)
+				postPayments(yritems)
+				payment = 0;
 			}
+			if (payment == 0) break;
 		}
 	}
 
-	void computePartialPayment(payment, item){
-		item.fullypaid = 0
-		item.paid = 0
-		item.basicidlepaid 		= 0.0
-		item.basicidleintpaid 	= 0.0
-		item.firecodepaid 		= 0.0
-		item.basicpaid 			= 0.0
-		item.basicintpaid 		= 0.0
-		item.sefpaid 			= 0.0
-		item.sefintpaid 		= 0.0
-
-		def idletaxtotal = item.basicidle + item.basicidleint 
-		def linedue = 0;
-
-		if (payment <= item.firecode + idletaxtotal){
-			linedue = item.basicidle + item.basicidleint + item.firecode
-			if (linedue > 0){
-				item.basicidlepaid = numSvc.round( (item.basicidle / linedue) * payment )
-				item.basicidleintpaid = numSvc.round( (item.basicidleint / linedue) * payment )
-				item.firecodepaid = payment - (item.basicidlepaid + item.basicidleintpaid)
-			}
-			payment = 0.0 
+	void postPayments(items) {
+		items.each{item -> 
+			em_compromise_item
+				.find([objid: item.objid])
+				.update([amtpaid: item.amount, interestpaid: item.interest])
 		}
+	}
+
+	void buildPartialPayment(items, payment){
+		def partialamt = payment
+
+		if (items.size() == 1){
+			distributePartialProportionally(partialamt, items.first())
+		} 
 		else {
-			item.basicidlepaid 		= item.basicidle
-			item.basicidleintpaid 	= item.basicidleint
-			item.firecodepaid 		= item.firecode 
-			payment -= item.firecode + idletaxtotal
-		}
-		
-		if (payment > 0.0){
-			linedue = item.basic + item.basicint + item.sef + item.sefint
+			def runningpartial = partialamt
+			def totalamount = items.total.sum() 
 
-			item.basicpaid = numSvc.round( (item.basic / linedue) * payment )
-			item.basicintpaid = numSvc.round( (item.basicint / linedue) * payment )
-			item.sefpaid = numSvc.round( (item.sef / linedue) * payment )
-			item.sefintpaid = payment - (item.basicpaid + item.basicintpaid + item.sefpaid )
+			for (int i = 0; i < items.size() - 1; i++){
+				def item = items[i]
+				def partial = numSvc.round(partialamt * numSvc.round(item.total / totalamount))
+				distributePartialProportionally(partial, item) 
+				runningpartial -= partial 
+			}
+			distributePartialProportionally(runningpartial, items.last()) 
 		}
 	}
+
+	void distributePartialProportionally(partial, item){
+		def totaldue = numSvc.round(item.total)
+		item.amount = numSvc.round(partial * (item.amount / totaldue))
+		item.interest = numSvc.round(partial - item.amount)
+		item.total = numSvc.round(item.amount + item.interest)
+		item.partialled = true 
+	}
+
 }
