@@ -26,7 +26,7 @@ vehicle.app.context=enterprise
 <modules> 
 	<!-- custom -->
 	<module file="custom/gov-lgu-nabunturan-receipt-report.jar" version="1.4"/>
-	<module file="custom/gov-lgu-nabunturan-rptis-report.jar" version="1.4"/>
+	<module file="custom/gov-lgu-nabunturan-rptis-report.jar" version="1.6"/>
 	<module file="custom/gov-lgu-nabunturan-rptis-tdreport.jar" version="1.0"/>
 	<module file="custom/gov-lgu-nabunturan-bpls.jar" version="1.4"/>
 	<module file="custom/gov-lgu-nabunturan-main.jar" version="1.5"/>

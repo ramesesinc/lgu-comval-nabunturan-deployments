@@ -15,12 +15,14 @@ from remittance r
   inner join cashreceiptitem cri on cri.receiptid = cr.objid 
   inner join itemaccount ia on ia.objid = cri.item_objid 
   left join cashreceipt_void v on v.receiptid = cr.objid 
+  left join collectiontype ct on ct.objid = cr.collectiontype_objid   
   left join account_item_mapping aim on (aim.maingroupid = $P{maingroupid} and aim.itemid = ia.objid) 
   left join account a on a.objid = aim.acctid 
 where r.collectionvoucherid = $P{collectionvoucherid} 
   and cri.item_fund_objid = $P{fundid} 
   and cr.formno <> '56' 
   and v.objid is null 
+  and ifnull(ct.handler,'') <> 'rpt' 
 group by a.code, a.title 
 order by a.code, a.title  
 
