@@ -2,8 +2,6 @@
 	<element tablename="paymentorder">
 		<field name="objid" primary="true" visible="true" searchable="true" caption="Trace No"/>
 		<field name="txndate" type="timestamp" required="true" />
-		<field name="txntype" />
-		<field name="txntypename"  />
 		<field name="payer_objid" required="true" />
 		<field name="payer_name" required="true" />
 		<field name="paidby" required="true" />
@@ -27,8 +25,8 @@
 
 		<complex name="info" serializer="default" required="true"/>
 
-		<complex name="collectiontype" ref="collectiontype" jointype="many-to-one" required="true" includefields="objid,name,title,handler,barcodekey,formno,af.*,fund.*">
-			<key field="collectiontypeid" target="objid"/>
+		<complex name="paymentordertype" ref="paymentorder_type" jointype="many-to-one" required="true">
+			<key field="paymentordertype_objid" target="objid"/>
 		</complex>
 		<complex name="items" serializer="default" required="false" type="list" />
 		<field name="queueid" required="false"/>

@@ -21,7 +21,7 @@ where dvf.parentid = $P{depositvoucherid}
 [getLiquidations]
 select 
 	cv.liquidatingofficer_objid, cv.liquidatingofficer_name, 
-	cv.controlno, cv.controldate, sum(cvf.amount) as amount 
+	cv.controlno, cv.controldate, sum(cvf.amount-cvf.totalcr) as amount 
 from depositvoucher dv 
 	inner join collectionvoucher cv on cv.depositvoucherid = dv.objid 
 	inner join collectionvoucher_fund cvf on cvf.parentid = cv.objid 
@@ -35,7 +35,7 @@ order by cv.liquidatingofficer_name, cv.controldate, cv.controlno
 [getLiquidationsByBankAcct]
 select 
 	cv.liquidatingofficer_objid, cv.liquidatingofficer_name, 
-	cv.controlno, cv.controldate, sum(cvf.amount) as amount 
+	cv.controlno, cv.controldate, sum(cvf.amount-cvf.totalcr) as amount 
 from ( 
 	select distinct df.parentid as depositvoucherid, df.fundid
 	from depositvoucher dv 

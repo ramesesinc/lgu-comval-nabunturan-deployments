@@ -39,27 +39,27 @@ vehicle.app.context=enterprise
 	<module file="core/osiris2-draw.jar" version="2.56"/>
 	<module file="core/osiris2-framework.jar" version="2.56"/>
 	<module file="core/osiris2-report.jar" version="2.56"/>
-	<module file="core/rameses-client-ui.jar" version="2.58"/>
+	<module file="core/rameses-client-ui.jar" version="2.59"/>
 	<module file="core/rameses-client-ui-bio.jar" version="2.56"/>
-	<module file="core/rameses-client-ui-jfx.jar" version="2.56"/>
+	<module file="core/rameses-client-ui-jfx.jar" version="2.57"/>
 	<module file="core/rameses-client-notification-socketio.jar" version="2.56"/>
 	<module file="core/rameses-common2.jar" version="2.56"/>
 	<module file="core/rameses-custom-impl.jar" version="2.56"/>
 	<module file="core/rameses-jdbc16.jar" version="2.56"/>
-	<module file="core/rameses-seti.jar" version="2.58"/>
+	<module file="core/rameses-seti.jar" version="2.59"/>
  
 	<!-- shared libraries -->
 	<module file="shared/client-system.jar" version="2.56"/>
-	<module file="shared/client-ui-extended.jar" version="2.56"/>
-	<module file="shared/rameses-client-menu.jar" version="2.56"/>
+	<module file="shared/client-ui-extended.jar" version="2.57"/>
+	<module file="shared/rameses-client-menu.jar" version="2.57"/>
 	<module file="shared/rameses-client-report.jar" version="2.56"/>
 	<module file="shared/rameses-rules-mgmt.jar" version="2.56"/>
 	<module file="shared/rameses-workflow-mgmt.jar" version="2.57"/>
 	<module file="shared/rameses-enterprise.jar" version="2.56"/>
-	<module file="shared/rameses-enterprise-admin.jar" version="2.56"/>
+	<module file="shared/rameses-enterprise-admin.jar" version="2.57"/>
 	<module file="shared/rameses-enterprise-entity.jar" version="2.57"/>
 	<module file="shared/rameses-enterprise-entity-tool.jar" version="2.56"/>
-	<module file="shared/rameses-enterprise-financial.jar" version="2.56"/>
+	<module file="shared/rameses-enterprise-financial.jar" version="2.57"/>
 	<module file="shared/rameses-client-notification2.jar" version="2.57"/>	
  
 	<!-- etracs -->
@@ -79,9 +79,9 @@ vehicle.app.context=enterprise
 	<!-- treasury -->	
 	<module file="treasury/rameses-treasury-common.jar" version="2.57"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.56"/>
-	<module file="treasury/rameses-gov-treasury.jar" version="2.59"/>
-	<module file="treasury/rameses-gov-treasury-report.jar" version="2.59"/>
-	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.56"/>
+	<module file="treasury/rameses-gov-treasury.jar" version="2.60"/>
+	<module file="treasury/rameses-gov-treasury-report.jar" version="2.60"/>
+	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.57"/>
 
 	<!-- bpls -->
 	<module file="bpls/rameses-gov-etracs-bpls.jar" version="2.57"/>
