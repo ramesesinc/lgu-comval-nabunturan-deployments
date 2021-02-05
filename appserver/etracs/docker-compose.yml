@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  
+  download-server:
+    image: nginx:latest
+    container_name: download-server
+    restart: always
+    logging:
+      driver: "json-file"
+      options: 
+        max-file: "5"
+        max-size: 10m
+    environment:
+      TZ: "Asia/Manila"
+    ports:
+      - "8000:80"
+    volumes:
+      - ../download/conf.d:/etc/nginx/conf.d
+      - ../download/resources:/resources
+      - ../_custom/static_files:/resources/others
+
+
+  etracs25-server:
+    image: ramesesinc/etracs25-server-municipality:255.02.007
+    container_name: etracs25-server
+    restart: always
+    logging:
+      driver: "json-file"
+      options: 
+        max-file: "5"
+        max-size: 10m
+    env_file:
+      - ./env.conf
+      - ../_custom/env.conf
+    ports:
+      - "8060:8060"
+      - "8061:8061"
+      - "8070:8070"
+      - "8080:8080"
+    volumes:
+      - ../_res/connections:/apps/etracs25/connections/ext
+      - ./datasources:/services/datasources
+      - ./modules:/apps/etracs25/modules
+
+      - ./dev_modules/rameses-enterprise-admin-services.jar:/services/modules/01-rameses-enterprise-admin-services.jar
+      - ./dev_modules/rameses-enterprise-financial-services.jar:/services/modules/rameses-enterprise-financial-services.jar
+
+      - ./dev_modules/rptis:/rptis
+      - ./dev_modules/rptis/etracs_rptis.conf:/apps/server/workspace/services/apps/etracs25/modules.conf.d/etracs_rptis.conf
+
+      - ./dev_modules/gov:/gov
+      - ./dev_modules/gov/etracs__gov.conf:/apps/etracs25/modules.conf.d/etracs__gov.conf
+
+      - ./dev_modules/bpls:/bpls
+      - ./dev_modules/bpls/etracs_bpls.conf:/apps/etracs25/modules.conf.d/etracs_bpls.conf
