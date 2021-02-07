@@ -13,8 +13,8 @@ services:
         max-size: "10m"
     env_file:
       - ./env.conf
-      - ../_res/env.conf
-      - ../_custom/env.conf
+      - ../../_res/env.conf
+      - ../../_custom/env.conf
     ports: 
       - "8072:8070"
     volumes:
