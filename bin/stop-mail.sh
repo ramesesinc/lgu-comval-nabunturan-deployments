@@ -1,6 +1,5 @@
 #!/bin/sh
 RUN_DIR=`pwd`
-cd ../mail
+cd ../email/mail-primary
 docker-compose down
-docker system prune -f
 cd $RUN_DIR

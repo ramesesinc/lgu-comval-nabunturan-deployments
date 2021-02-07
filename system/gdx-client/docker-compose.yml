@@ -3,7 +3,7 @@ version: "3"
 services:
 
   gdx-proxy-server:
-    image: "ramesesinc/gdx-proxy-server:v001"
+    image: ramesesinc/gdx-proxy-server:v001
     container_name: gdx-proxy-server
     restart: always
     logging: 
@@ -18,7 +18,7 @@ services:
 
 
   gdx-client:
-    image: "ramesesinc/gdx-client:1.01.003"
+    image: ramesesinc/gdx-client:1.03.01
     container_name: gdx-client
     restart: always
     logging: 
@@ -28,8 +28,11 @@ services:
         max-size: "10m"
     env_file:
       - ./env.conf
-      - ../_custom/env.conf
+      - ../../_res/env.conf
+      - ../../_custom/env.conf
     ports:
       - "8571:8571"
     volumes:
-      - ../_res/connections:/apps/gdx/connections/ext
+      - ../../_res/connections:/apps/gdx/connections/ext
+
+      - ./lib/rameses-common2.jar:/apps/server/lib/rameses-common2.jar

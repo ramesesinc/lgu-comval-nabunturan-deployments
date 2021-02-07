@@ -1,21 +1,41 @@
 [app-server]
-
 IP  : 223.222.100.3
 User: lgunabunturan
 Pass: p@ssw0rd
 
-Portainer-URL : https://223.222.100.3:9000
-Portainer-User: admin
-Portainer-Pass: p@ssw0rd
 
-Webmin-URL : https://223.222.100.3:10000
-Webmin-User: lgunabunturan
-Webmin-Pass: p@ssw0rd
+[Portainer]
+URL : https://223.222.100.3:9000
+User: admin
+Pass: p@ssw0rd
 
+
+[Webmin]
+URL : https://223.222.100.3:10000
+User: lgunabunturan
+Pass: p@ssw0rd
 
 
 [db-server]
-
 IP  : 223.222.100.2
 User: etracs
 Pass: p@ssw0rd
+
+
+[db-patches]
+from v2.5.5_20201013_001.upgrade
+to   v255_20210131.patch
+
+
+[docker-images]
+docker pull nginx:latest
+docker pull ramesesinc/notification-server:1.0
+docker pull ramesesinc/node-download-server:0.0.3
+docker pull ramesesinc/etracs-web:2.5.01.01
+docker pull ramesesinc/gdx-proxy-server:v001
+docker pull ramesesinc/gdx-client:1.03.01
+docker pull ramesesinc/queue-server:255.02.002
+docker pull ramesesinc/mail-server:latest
+docker pull ramesesinc/local-epayment-server:2.5.01.02.04
+docker pull ramesesinc/etracs-server-municipality:2.5.03.01.01
+docker pull ramesesinc/local-vehicle-server:255.01.002

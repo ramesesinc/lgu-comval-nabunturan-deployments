@@ -1,6 +1,5 @@
 #!/bin/sh
 RUN_DIR=`pwd`
-cd ../notification
+cd ../system/notification
 docker-compose down
-docker system prune -f
 cd $RUN_DIR
