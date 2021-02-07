@@ -24,3 +24,6 @@ services:
       - ./dev_lib/rameses-common2.jar:/apps/server/lib/rameses-common2.jar
       - ./dev_lib/rameses-osiris3-core2.jar:/apps/server/lib/rameses-osiris3-core2.jar
       - ./dev_lib/rameses-osiris3-server.jar:/apps/server/lib/rameses-osiris3-server.jar
+
+      - ./dev_services_modules:/apps/server/services/modules
+      - ./dev_apps_modules:/apps/server/services/apps/enterprise/modules
