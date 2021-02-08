@@ -1,0 +1,39 @@
+import com.rameses.annotations.*;
+import com.rameses.common.*;
+import com.rameses.services.extended.*;
+
+class RPTSyncDataManagementService
+{   
+	@XConnection('fileupload')
+    def fu;
+
+	@DataContext('rpt_syncdata_error')
+	def em_sync_error
+
+	@ProxyMethod
+	public void rescheduleErrors() {
+		em_sync_error.where('1=1').delete();
+	}
+
+	@ProxyMethod
+	public void deleteError(error) {
+		em_sync_error.find([objid: error.objid]).delete();
+		fu.delete(error.filekey);
+	}
+
+	@ProxyMethod
+	public void deleteErrors() {
+		def haserror = false;
+		em_sync_error.where('1=1').list().each{
+			try {
+				deleteError(it)
+			} catch (e) {
+				haserror = true;
+			}
+		}
+		if (haserror) {
+			throw new Exception('Some data were not deleted. Please try again.')
+		}
+	}
+
+}

@@ -1,14 +1,13 @@
 version: "3"
 
 services:
-
   etracs-server:
     container_name: etracs-server
     image: ramesesinc/etracs-server-municipality:2.5.03.01.01
     restart: always
     logging:
       driver: "json-file"
-      options: 
+      options:
         max-file: "5"
         max-size: 10m
     environment:
@@ -29,3 +28,5 @@ services:
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
       - ../../_custom/fileserver:/fileserver
+
+      - ./dev_modules/rameses-gov-etracs-rptis-sync2-services.jar:/apps/server/services/modules/rptis/rameses-gov-etracs-rptis-sync2-services.jar
