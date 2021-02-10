@@ -1,6 +1,6 @@
 provider=fileupload
 host=${app_server_ip}
-post=8500
+port=7000
 channel=${fileupload_channel}
 uploadDir=/fileserver/uploads
 downloadDir=/fileserver/downloads
