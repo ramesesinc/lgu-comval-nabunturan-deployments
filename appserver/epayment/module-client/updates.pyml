@@ -8,4 +8,4 @@ app:
   modules:
     - { order: 230, version: 2.50, file: "modules/epayment/rameses-gov-epayment.jar" }
     - { order: 231, version: 2.50, file: "modules/epayment/rameses-gov-epayment-report.jar" }
-    - { order: 232, version: 2.50, file: "modules/epayment/epayment-report-templates.jar" }
+    - { order: 232, version: 2.52, file: "modules/epayment/reports/epayment-report-templates.jar" }
