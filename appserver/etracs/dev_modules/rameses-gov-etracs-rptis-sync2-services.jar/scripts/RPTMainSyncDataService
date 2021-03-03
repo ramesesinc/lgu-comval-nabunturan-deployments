@@ -43,7 +43,7 @@ class RPTMainSyncDataService {
 		
 		data.createdby = [objid: env.USERID, name: env.USER, title: env.JOBTITLE]
 		data.dtfiled = dtSvc.serverDate
-		em_forsync.create(data)
+		em_forsync.save(data)
 		return data
 	}
 
