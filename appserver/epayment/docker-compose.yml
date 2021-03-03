@@ -26,3 +26,5 @@ services:
       - ./module-client/reports:/apps/server/templates
       - ../../_custom/module-client/epayment:/apps/server/templates/custom
       - ../../_custom/output:/apps/server/output
+
+      - ./dev/rameses-gov-epayment-services.jar:/enterprise/modules/rameses-gov-epayment-services.jar
