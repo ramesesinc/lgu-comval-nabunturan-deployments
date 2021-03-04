@@ -105,7 +105,7 @@ class EORRemittanceService {
         def findby = [ objid: o.objid ];
         eor_rem_lock.find( findby ).update([ lockid: new java.rmi.server.UID().toString() ]); 
 
-        def reminfo = remEm.find( findby ).select('objid,state').first(); 
+        def reminfo = remEm.find( findby ).select('objid,state,controlno').first(); 
         if ( !reminfo?.objid ) 
             throw new Exception('EOR Remittance record not found'); 
         if ( reminfo?.state.toString().toUpperCase() != 'DRAFT' ) 
@@ -126,10 +126,13 @@ class EORRemittanceService {
         def u = [ state: 'POSTED' ]; 
         u.dtposted = dateSvc.getServerDate();
         u.postedby = [objid: env.USERID, name: env.FULLNAME];
-        u.controlno = numSvc.getNextRemittanceNumber( [:] ); 
+        if ( reminfo.controlno.toString().toUpperCase().startsWith("TMP-REM")) {
+            u.controlno = numSvc.getNextRemittanceNumber( [:] ); 
+        }
         remEm.find( findby ).update( u ); 
-        u.objid = o.objid; 
 
+        u.objid = o.objid; 
+        
         postingSvc.post( u ); 
 
         return u; 
