@@ -31,3 +31,4 @@ services:
       - ../../_custom/fileserver:/fileserver
 
       - ./dev_modules/rameses-gov-etracs-rptis-sync2-services.jar:/apps/server/services/modules/rptis/rameses-gov-etracs-rptis-sync2-services.jar
+      - ./dev_modules/rameses-gov-treasury-services.jar:/apps/server/services/modules/treasury/rameses-gov-treasury-services.jar

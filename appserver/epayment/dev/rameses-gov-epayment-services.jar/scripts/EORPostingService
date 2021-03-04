@@ -8,11 +8,8 @@ class EORPostingService {
     @Service(value="OrgService", connection="admin")
     def orgSvc; 
 
-    @DataContext(value="itemaccount", connection="treasury")
-    def itemAcct_db;
-
-    @DataContext(value="income_summary", connection="treasury")
-    def incomesummary_db;
+    @Service(value="IncomeSummaryService", connection="treasury")
+    def incomeSummarySvc;
 
     @DataContext("eor_remittance")
     def rem_db;
@@ -31,9 +28,8 @@ class EORPostingService {
         def org = orgSvc.getRoot(); 
         if ( !org?.objid ) throw new Exception("Failed to get the root org"); 
 
-        incomesummary_db.find([ refid: rem.objid ]).delete(); 
-
         def items = rem_db.getItemsForIncomeSummary([ remittanceid: rem.objid ]);         
+
         items.each{ o-> 
             o.reftype = 'eor_remittance'; 
             o.collectorid = 'eor'; 
@@ -55,10 +51,13 @@ class EORPostingService {
             o.remittanceqtr = o.liquiationqtr = o.refqtr; 
 
             def itemacct = rem_db.findItemFund([ remittanceid: rem.objid, acctid: o.acctid ]); 
-            if ( !itemacct ) itemacct = itemAcct_db.find([ objid: o.acctid ]); 
+            if ( !itemacct ) { 
+                itemacct = incomeSummarySvc.findItemAccount([ objid: o.acctid ]); 
+            } 
 
             o.fundid = itemacct?.fund?.objid; 
-            incomesummary_db.create( o ); 
         }
+
+        incomeSummarySvc.postItems([ refid: rem.objid, items: items ]); 
     }
 }
