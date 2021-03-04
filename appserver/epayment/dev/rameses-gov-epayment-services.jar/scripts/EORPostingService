@@ -48,7 +48,7 @@ class EORPostingService {
             o.remittancedate = o.liquidationdate = o.refdate; 
             o.remittanceyear = o.liquidationyear = o.refyear; 
             o.remittancemonth = o.liquidationmonth = o.refmonth; 
-            o.remittanceqtr = o.liquiationqtr = o.refqtr; 
+            o.remittanceqtr = o.liquidationqtr = o.refqtr; 
 
             def itemacct = rem_db.findItemFund([ remittanceid: rem.objid, acctid: o.acctid ]); 
             if ( !itemacct ) { 
