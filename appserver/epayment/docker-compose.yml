@@ -28,3 +28,4 @@ services:
       - ../../_custom/output:/apps/server/output
 
       - ./dev/rameses-gov-epayment-services.jar:/enterprise/modules/rameses-gov-epayment-services.jar
+      - ./dev/rameses-gov-epayment-report-services.jar:/enterprise/modules/rameses-gov-epayment-report-services.jar
