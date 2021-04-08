@@ -4,7 +4,7 @@ services:
 
   epayment-server:
     container_name: epayment-server
-    image: ramesesinc/local-epayment-server:2.5.01.02.04
+    image: ramesesinc/local-epayment-server:2.5.01.02.05
     restart: always
     logging: 
       driver: "json-file"
@@ -26,6 +26,3 @@ services:
       - ./module-client/reports:/apps/server/templates
       - ../../_custom/module-client/epayment:/apps/server/templates/custom
       - ../../_custom/output:/apps/server/output
-
-      - ./dev/rameses-gov-epayment-services.jar:/enterprise/modules/rameses-gov-epayment-services.jar
-      - ./dev/rameses-gov-epayment-report-services.jar:/enterprise/modules/rameses-gov-epayment-report-services.jar
