@@ -35,11 +35,6 @@ class UploadTask {
             } else {
                 if (!fileEntry.name.startsWith(ObjectWriter.TEMP_FILE_PREFIX)) {
                     String key = extractKey(fileEntry.getPath());
-                    println "================================";
-                    println "KEY: " + key;
-                    println "FILE PATH    : " + fileEntry.path;
-                    println "FILE ABS-PATH: " + fileEntry.absolutePath;
-                    println " ";
                     def reader = new ObjectReader(fileEntry);
                     def syncitem = reader.read();
                     reader.close();

@@ -10,11 +10,27 @@ class DownloadTask {
     @Service('RPTMainSyncDataService')
     def svc
 
+    @Service('RPTSyncDataManagementService')
+    def mgmtSvc
+
+    @DataContext('rpt_syncdata_completed')
+    def em_sync_completed
+
     @DataContext('rpt_syncdata_error')
     def em_sync_error
 
-    @Schedule(interval=120)
+    @Service('Var')
+    def var;
+
+    @Service('DateService')
+    def dtSvc;
+
+    def DOWNLOAD_FLAG = "fileserver_download_task_active"
+
+    @Schedule(interval=300)
     public void doDownload( evt ) {
+        if (!downloaderActive()) return
+
         try {
             fu.getList().each{
                 download(it);
@@ -22,6 +38,11 @@ class DownloadTask {
         } catch ( e ) {
             println "DownlaodTask [ERROR] " + e.message;
         }
+    }
+
+    @Schedule(interval=900)
+    public void rescheduleErrors( evt ) {
+        mgmtSvc.rescheduleErrors();
     }
 
     void download(downloadinfo) {
@@ -36,7 +57,9 @@ class DownloadTask {
             reader = fu.getObject(downloadinfo.Key);
             syncdata = reader.read();
             syncdata.data = reader.read(); 
-            svc.receive(syncdata)
+            svc.receive(syncdata);
+            syncdata.dtcreated = dtSvc.serverDate;
+            em_sync_completed.save(syncdata);
             reader.close();
             fu.delete(downloadinfo.Key);
         } catch (e) {
@@ -51,4 +74,14 @@ class DownloadTask {
             if (reader) reader.close();
         }
     }
+
+    def downloaderActive() {
+        def status = var.getProperty(DOWNLOAD_FLAG, 0).toString();
+        if (status.matches("1|y|yes|t|true")) {
+            return true;
+        }
+        println 'DownloadTask [INFO] inactive' ;
+        return false;
+    }
+
 }
